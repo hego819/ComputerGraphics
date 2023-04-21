@@ -27,7 +27,11 @@
       var mode = 0;
       var nearest = null;
       var selected = null;
-
+      var prev = 0;
+      var modes = ['move_point', 'add_point', 'rem_point'];
+      var default_icon = ["https://cdn.glitch.global/5fd7f1e4-32da-46e9-9e99-dd76bbc19215/movebutton.png?v=1682070338690", "https://cdn.glitch.global/5fd7f1e4-32da-46e9-9e99-dd76bbc19215/addbutton.png?v=1682070966477", "https://cdn.glitch.global/5fd7f1e4-32da-46e9-9e99-dd76bbc19215/rembutton.png?v=1682071541742"];
+      var cur_icon = ["https://cdn.glitch.global/5fd7f1e4-32da-46e9-9e99-dd76bbc19215/movebutton_chosen.png?v=1682077606922", "https://cdn.glitch.global/5fd7f1e4-32da-46e9-9e99-dd76bbc19215/addbutton_chosen.png?v=1682077606056", "https://cdn.glitch.global/5fd7f1e4-32da-46e9-9e99-dd76bbc19215/rembutton_chosen.png?v=1682077606488"];
+      
       function eval_quadratic_bezier(l1, l2, r1, r2, d) {
         var ret = [...l1];
         for (var i = 0; i <= d; ++i) {
@@ -55,15 +59,42 @@
       }
       
       function move_point() {
+        prev = mode;
         mode = 0;
+        //change_cursor();
+        change_icon(prev, mode);
       }
 
       function add_point() {
+        prev = mode;
         mode = 1;
+        //change_cursor();
+        change_icon(prev, mode);
       }
 
       function remove_point() {
+        prev = mode;
         mode = 2;
+        //change_cursor();
+        change_icon(prev, mode);
+      }
+      
+      function change_icon(prev, cur) {
+        var prev_mode = document.getElementById(modes[prev]);
+        var cur_mode = document.getElementById(modes[cur]);
+        prev_mode.src = default_icon[prev];
+        cur_mode.src = cur_icon[cur];
+      }
+      
+      function change_cursor() {
+        if (mode == 0) {
+          document.body.style.cursor = "move";
+        } else if (mode == 1) {
+          //document.body.style.cursor = "default";
+          document.body.style.cursor = "url('https://cdn.glitch.global/5fd7f1e4-32da-46e9-9e99-dd76bbc19215/cursor.png?v=1682075693795'), default";
+        } else {
+          document.body.style.cursor = "url('https://cdn.glitch.global/5fd7f1e4-32da-46e9-9e99-dd76bbc19215/cursor2.png?v=1682075693352'), default";
+        }
       }
 
       function draw() {
@@ -300,6 +331,12 @@
             draw();
           }
         };
+        canvas.onmouseout = function (evt) {
+          document.body.style.cursor = "default";
+        }
+        canvas.onmouseenter = function (evt) {
+          change_cursor();
+        }
         document.onmouseup = function (evt) {
           if (camera.is_moving()) {
             camera.finish_moving();
@@ -329,21 +366,30 @@
             style="border: 1px solid #000000"
           ></canvas>
         </td>
-        <td style="display: flex;flex-direction: column;margin-left: 0px;">
+        <td style="display: flex;flex-direction: column;margin-left: 10px;">
           <b>
-          <input
+          <img
+            src="https://cdn.glitch.global/5fd7f1e4-32da-46e9-9e99-dd76bbc19215/movebutton.png?v=1682070338690"
+            height="50"
+            width="50"
             type="button"
             id="move_point"
             onclick="move_point()"
             value="move"
           /></b><br>
-          <input style="margin-top: -10px"
+          <img style="margin-top: -10px"
+            src="https://cdn.glitch.global/5fd7f1e4-32da-46e9-9e99-dd76bbc19215/addbutton.png?v=1682070966477"
+            height="50"
+            width="50"
             type="button"
             id="add_point"
             onclick="add_point()"
             value="add"
           /><br>
-          <input style="margin-top: -10px"
+          <img style="margin-top: -10px"
+            src="https://cdn.glitch.global/5fd7f1e4-32da-46e9-9e99-dd76bbc19215/rembutton.png?v=1682071541742"
+            height="50"
+            width="50"
             type="button"
             id="rem_point"
             onclick="remove_point()"
@@ -401,6 +447,7 @@
     <ul>
       <li>Alt+Drag: Camera Pan</li>
       <li>Alt+Shift+drag: Camera Zoom</li>
+      <li>Can`t remove points when it's less than five.</li>
     </ul>
 
     <div
