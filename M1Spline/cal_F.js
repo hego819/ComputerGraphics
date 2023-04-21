@@ -51,17 +51,3 @@ function p_Bezier(p0, p1, p2) {
 function x3(a, b, c, d, x) {
   return a * x ** 3 + b * x ** 2 + c * x + d;
 }
-
-//Circular
-function F_Circular(f0, f1, f2) {
-  var a = f0[0] - f1[0];
-  var b = f0[1] - f1[1];
-  var c = f0[0] - f2[0];
-  var d = f0[1] - f2[1];
-  var e = (f0[0] ** 2 - f1[0] ** 2 - (f1[1] ** 2 - f0[1] ** 2)) / 2;
-  var f = (f0[0] ** 2 - f2[0] ** 2 - (f2[1] ** 2 - f0[1] ** 2)) / 2;
-  var x0 = -(d * e - b * f) / (b * c - a * d);
-  var y0 = -(a * f - c * e) / (b * c - a * d);
-  var r = ((x0 - f0[0]) ** 2 + (y0 - f0[1]) ** 2) ** (1 / 2);
-  console.log(x0, y0, r);
-}
