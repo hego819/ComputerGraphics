@@ -70,7 +70,7 @@
           for (let j = linkages.length - 1; j >= 0; --j) {
             let v1;
             let v2;
-            let sita;
+            let theta;
             let vaxis;
             let angle;
             if (j == 0) {
@@ -94,13 +94,12 @@
             ];}
             v1 = normalize(v1);
             v2 = normalize(v2);
-            sita = Math.acos(InnerProduct(v1, v2));
-            if (isNaN(sita)) {
-              console.log("Error: sita = NaN");
-              continue;
+            theta = Math.acos(InnerProduct(v1, v2));
+            if (isNaN(theta)) {
+              theta = 0;
             }
             vaxis = OuterProduct(v1, v2);
-            angle = (sita * 180) / Math.PI;
+            angle = (theta * 180) / Math.PI;
             if (vaxis > 0) {
               linkages[j].angle += angle;
             } else {
